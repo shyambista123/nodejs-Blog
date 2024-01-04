@@ -1,0 +1,29 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .navbar {
+    background-color: #333;
+    overflow: hidden;
+    padding: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+  }
+  
+  .navbar a h3 {
+    margin: 0;
+    color: white;
+  }
+  .navbar a{
+    text-decoration: none;
+    font-size: 23px;
+  }
+  
+  .navbar a.logout {
+    color: white;
+    text-decoration: none;
+  }
+  
