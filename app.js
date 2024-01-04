@@ -7,7 +7,7 @@ const userRoutes = require('./routes/userRouters');
 const blogRoutes = require('./routes/blogRouters');
 
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize(process.env.DATABASE_PROD_URL, {
   dialect: 'postgres',
   protocol: 'postgres',
   dialectOptions: {
