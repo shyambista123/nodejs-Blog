@@ -7,9 +7,17 @@ const userRoutes = require('./routes/userRouters');
 const blogRoutes = require('./routes/blogRouters');
 
 
-const sequelize = new Sequelize(process.env.DATABASE_URL,{
-  // ssl: true, //for database in cluod 
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres',
+  protocol: 'postgres',
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false, 
+    },
+  },
 });
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
