@@ -5,19 +5,18 @@ const { Sequelize } = require('sequelize');
 const methodOverride = require('method-override');
 const userRoutes = require('./routes/userRouters');
 const blogRoutes = require('./routes/blogRouters');
+const config = require('./config/config.js');
 
+const sequelize = new Sequelize(config.production);
 
-const sequelize = new Sequelize(process.env.DATABASE_PROD_URL, {
-  dialect: 'postgres',
-  protocol: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false, 
-    },
-  },
-});
-
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch((err) => {
+    console.error('Unable to connect to the database:', err);
+  });
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,7 +26,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-  secret: 'your_secret_key',
+  secret: process.env.SECRET_KEY || 'default_secret_key',
   resave: false,
   saveUninitialized: true,
 }));
