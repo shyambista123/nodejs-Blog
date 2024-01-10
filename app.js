@@ -49,8 +49,6 @@ app.use('/', userRoutes);
 
 app.use('/blogs', authenticateUser, blogRoutes);
 
-sequelize.sync().then(() => {
-  app.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
   });
-});
