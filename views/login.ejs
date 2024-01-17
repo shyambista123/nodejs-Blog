@@ -10,11 +10,19 @@
   <%- include('navBar') %>
   <h2>Login</h2>
   <br>
-  <% if (message) { %>
+  <% if (message && message.length > 0) { %>
     <div class="flash-message" style="text-align: center;">
-      <%= message %>
+      <% if (message[0].type === 'success') { %>
+        <p style="color: green;">
+          <%= message[0].text %>
+        </p>
+      <% } else { %>
+        <p style="color: red;">
+          <%= message[0].text %>
+        </p>
+      <% } %>
     </div>
-  <% } %>  
+  <% } %>
 
   <br>
   <form method="POST" action="/login">

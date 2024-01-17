@@ -31,7 +31,7 @@ router.post('/register', async (req, res) => {
       const user = await User.create({ username, password: hashedPassword });
 
       // Flash a success message
-      req.flash('message', 'Registered successfully! You can now log in.');
+      req.flash('message', { type: 'success', text: 'Registered successfully! You can now log in.' });
       
       req.session.user = { id: user.id, username: user.username };
       res.redirect('/login');
@@ -56,7 +56,7 @@ router.post('/login', async (req, res) => {
       req.session.user = { id: user.id, username: user.username };
       res.redirect('/blogs');
     } else {
-      req.flash('message', 'Invalid username or password');
+      req.flash('message', { type: 'error', text: 'Invalid username or password'});
       res.redirect('/login');
     }
   } catch (error) {
