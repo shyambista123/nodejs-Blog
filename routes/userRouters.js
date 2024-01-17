@@ -15,24 +15,36 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/register', (req, res) => {
-  res.render('register');
+  res.render('register', { message: req.flash('registerMessage') });
 });
 
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
   try {
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    const user = await User.create({ username, password: hashedPassword });
-    req.session.user = { id: user.id, username: user.username };
-    res.redirect('/login');
+    const existingUser = await User.findOne({ where: { username } });
+
+    if (existingUser) {
+      req.flash('registerMessage', 'User with this username already exists');
+      res.redirect('/register');
+    } else {
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      const user = await User.create({ username, password: hashedPassword });
+
+      // Flash a success message
+      req.flash('message', 'Registered successfully! You can now log in.');
+      
+      req.session.user = { id: user.id, username: user.username };
+      res.redirect('/login');
+    }
   } catch (error) {
     console.error(error);
     res.redirect('/register');
   }
 });
 
+
 router.get('/login', (req, res) => {
-  res.render('login');
+  res.render('login', { message: req.flash('message') });
 });
 
 router.post('/login', async (req, res) => {
@@ -44,6 +56,7 @@ router.post('/login', async (req, res) => {
       req.session.user = { id: user.id, username: user.username };
       res.redirect('/blogs');
     } else {
+      req.flash('message', 'Invalid username or password');
       res.redirect('/login');
     }
   } catch (error) {
@@ -52,7 +65,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.get('/logout', (req, res) => {
+router.get('/logout', async (req, res) => {
   req.session.destroy(() => {
     res.redirect('/');
   });

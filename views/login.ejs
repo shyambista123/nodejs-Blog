@@ -7,8 +7,16 @@
   <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-  <%- include ('navBar')%>
+  <%- include('navBar') %>
   <h2>Login</h2>
+  <br>
+  <% if (message) { %>
+    <div class="flash-message" style="text-align: center;">
+      <%= message %>
+    </div>
+  <% } %>  
+
+  <br>
   <form method="POST" action="/login">
     <label for="username">Username:</label>
     <input type="text" name="username" required>

@@ -6,6 +6,7 @@ const methodOverride = require('method-override');
 const userRoutes = require('./routes/userRouters');
 const blogRoutes = require('./routes/blogRouters');
 const config = require('./config/config.js');
+const flash = require('express-flash')
 
 const sequelize = new Sequelize(config.production);
 
@@ -31,6 +32,7 @@ app.use(session({
   saveUninitialized: true,
 }));
 
+app.use(flash()); 
 
 app.use(methodOverride('_method'));
 
@@ -48,6 +50,11 @@ const authenticateUser = (req, res, next) => {
 app.use('/', userRoutes);
 
 app.use('/blogs', authenticateUser, blogRoutes);
+
+app.use((req, res) => {
+  res.status(404).render('404');
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

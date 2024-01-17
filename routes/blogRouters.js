@@ -27,6 +27,12 @@ router.get('/create', (req, res) => {
 router.post('/create', async (req, res) => {
   const { title, content } = req.body;
   const userId = req.session.user.id;
+
+  if (!title || /^\s*$/.test(title) || !content || /^\s*$/.test(content)) {
+    console.error('Invalid title or content');
+    return res.redirect('/blogs/create');
+  }
+
   try {
     const blog = await Blog.create({ title, content, UserId: userId });
     res.redirect(`/blogs/`);
@@ -35,6 +41,7 @@ router.post('/create', async (req, res) => {
     res.redirect('/blogs/create');
   }
 });
+
 
 const isBlogOwner = async (req, res, next) => {
   const blogId = req.params.id;
