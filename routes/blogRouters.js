@@ -29,8 +29,7 @@ router.post('/create', async (req, res) => {
   const userId = req.session.user.id;
 
   if (!title || /^\s*$/.test(title) || !content || /^\s*$/.test(content)) {
-    console.error('Invalid title or content');
-    return res.redirect('/blogs/create');
+    return res.send('Invalid title or content');
   }
 
   try {
@@ -38,7 +37,7 @@ router.post('/create', async (req, res) => {
     res.redirect(`/blogs/`);
   } catch (error) {
     console.error(error);
-    res.redirect('/blogs/create');
+    res.status(500).send({ error: 'Internal Server Error' });
   }
 });
 
@@ -83,22 +82,25 @@ router.post('/edit/:id', isBlogOwner, async (req, res) => {
   const blogId = req.params.id;
   const { title, content } = req.body;
 
+  if (!title || /^\s*$/.test(title) || !content || /^\s*$/.test(content)) {
+    return res.send('Invalid title or content');
+  }
+
   try {
     const blog = await Blog.findByPk(blogId);
 
     if (blog) {
-      blog.title = title;
-      blog.content = content;
-      await blog.save();
-      res.redirect(`/blogs/`);
+      await blog.update({ title, content });
+      res.redirect('/blogs');
     } else {
       res.redirect('/blogs');
     }
   } catch (error) {
     console.error(error);
-    res.redirect(`/blogs/edit/${blogId}`);
+    res.status(500).send({ error: 'Internal Server Error' });
   }
 });
+
 
 router.delete('/delete/:id', isBlogOwner, async (req, res) => {
   const blogId = req.params.id;
