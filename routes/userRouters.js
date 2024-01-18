@@ -30,7 +30,6 @@ router.post('/register', async (req, res) => {
       const hashedPassword = await bcrypt.hash(password, saltRounds);
       const user = await User.create({ username, password: hashedPassword });
 
-      // Flash a success message
       req.flash('message', { type: 'success', text: 'Registered successfully! You can now log in.' });
       
       req.session.user = { id: user.id, username: user.username };

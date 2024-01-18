@@ -10,11 +10,16 @@
   <%- include('navBar') %>
   <h2>Register</h2>
   <br>
-  <% if (message) { %>
-    <div class="flash-message" style="text-align: center; color: red;">
-      <%= message %>
+  <% if (message && message.length > 0) { %>
+    <div class="flash-message-container">
+      <div class="flash-message">
+        <p>
+          <%= message %>
+          <span class="close-btn" onclick="this.parentNode.parentNode.style.display='none';">&times;</span>
+        </p>
+      </div>
     </div>
-  <% } %>  
+  <% } %>
   <br>
   <form method="POST" action="/register">
     <label for="username">Username:</label>

@@ -11,19 +11,15 @@
   <h2>Login</h2>
   <br>
   <% if (message && message.length > 0) { %>
-    <div class="flash-message" style="text-align: center;">
-      <% if (message[0].type === 'success') { %>
-        <p style="color: green;">
+    <div class="flash-message-container">
+      <div class="flash-message <%= message[0].type %>">
+        <p>
           <%= message[0].text %>
+          <span class="close-btn" onclick="this.parentNode.parentNode.style.display='none';">&times;</span>
         </p>
-      <% } else { %>
-        <p style="color: red;">
-          <%= message[0].text %>
-        </p>
-      <% } %>
+      </div>
     </div>
   <% } %>
-
   <br>
   <form method="POST" action="/login">
     <label for="username">Username:</label>
