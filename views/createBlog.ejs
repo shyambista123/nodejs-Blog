@@ -9,6 +9,20 @@
 <body>
   <%- include('navBar') %>
   <h1>Create a New Blog</h1>
+
+  <% if (error_messages && error_messages.length > 0) { %>
+    <div class="flash-message-container">
+      <% error_messages.forEach(message => { %>
+        <div class="flash-message">
+          <p>
+            <%= message %>
+            <span class="close-btn" onclick="this.parentNode.style.display='none';">&times;</span>
+          </p>
+        </div>
+      <% }); %>
+    </div>
+  <% } %>
+
   <form action="/blogs/create" method="post">
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" required>

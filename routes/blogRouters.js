@@ -7,12 +7,15 @@ router.get('/', async (req, res) => {
   try {
     const blogs = await Blog.findAll({
       include: {
-        model: User, 
+        model: User,
         as: 'User',
       },
     });
 
-    res.render('blogs', { blogs });
+    res.render('blogs', {
+      blogs,
+      success_messages: req.flash('success'),
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
@@ -20,8 +23,10 @@ router.get('/', async (req, res) => {
 });
 
 
+
 router.get('/create', (req, res) => {
-  res.render('createBlog');
+  res.render('createBlog', { error_messages: req.flash('error') });
+
 });
 
 router.post('/create', async (req, res) => {
@@ -29,17 +34,21 @@ router.post('/create', async (req, res) => {
   const userId = req.session.user.id;
 
   if (!title || /^\s*$/.test(title) || !content || /^\s*$/.test(content)) {
-    return res.send('Invalid title or content');
+    req.flash('error', 'Invalid title or content');
+    return res.redirect('/blogs/create');
   }
 
   try {
     const blog = await Blog.create({ title, content, UserId: userId });
-    res.redirect(`/blogs/`);
+    req.flash('success', 'Blog created successfully');
+    res.redirect('/blogs/');
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: 'Internal Server Error' });
+    req.flash('error', 'Internal Server Error');
+    res.redirect('/blogs/add');
   }
 });
+
 
 
 const isBlogOwner = async (req, res, next) => {
@@ -68,7 +77,7 @@ router.get('/edit/:id', isBlogOwner, async (req, res) => {
     const blog = await Blog.findByPk(blogId);
 
     if (blog) {
-      res.render('editBlog', { blog });
+      res.render('editBlog', { blog, error_messages: req.flash('error') });
     } else {
       res.redirect('/blogs');
     }
@@ -78,12 +87,14 @@ router.get('/edit/:id', isBlogOwner, async (req, res) => {
   }
 });
 
+
 router.post('/edit/:id', isBlogOwner, async (req, res) => {
   const blogId = req.params.id;
   const { title, content } = req.body;
 
   if (!title || /^\s*$/.test(title) || !content || /^\s*$/.test(content)) {
-    return res.send('Invalid title or content');
+    req.flash('error', 'Invalid title or content');
+    return res.redirect('/blogs/create');
   }
 
   try {

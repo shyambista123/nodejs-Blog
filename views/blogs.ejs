@@ -8,8 +8,19 @@
 </head>
 <body>
   <%- include('navBar') %>
-  <div class="body-container">
     <h1>All Blogs</h1>
+
+    <div class="success-message-container">
+      <% success_messages.forEach(message => { %>
+        <div class="success-message">
+          <p>
+            <%= message %>
+            <span class="close-btn" onclick="this.parentNode.style.display='none';">&times;</span>
+          </p>
+        </div>
+      <% }); %>
+    </div>
+
     <div class="blog-list-container">
       <ul>
         <% blogs.forEach(blog => { %>
@@ -29,6 +40,5 @@
     </div>
 
     <a href="/blogs/create" class="create-blog-link button-primary">New Blog</a>
-  </div>
 </body>
 </html>

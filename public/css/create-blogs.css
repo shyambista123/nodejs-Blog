@@ -49,3 +49,30 @@ body {
   button:hover {
     background-color: #4caf50;
   }
+  .flash-message-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .flash-message {
+    display: inline-block;
+    padding: 15px;
+    text-align: center;
+    border: 1px solid;
+    border-radius: 5px;
+  }
+
+  .flash-message p {
+    margin: 0;
+  }
+
+  .flash-message {
+    color: red;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+
+  .flash-message .close-btn {
+    cursor: pointer;
+  }
