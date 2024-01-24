@@ -20,26 +20,38 @@ router.get('/register', (req, res) => {
 
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
+
+  if (username.trim() === '') {
+    req.flash('registerMessage', 'Username cannot be empty or contain only spaces');
+    return res.redirect('/register');
+  }
+
+  if (password.trim() === '') {
+    req.flash('registerMessage', 'Password cannot be empty or contain only spaces');
+    return res.redirect('/register');
+  }
+
   try {
     const existingUser = await User.findOne({ where: { username } });
 
     if (existingUser) {
       req.flash('registerMessage', 'User with this username already exists');
-      res.redirect('/register');
-    } else {
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
-      const user = await User.create({ username, password: hashedPassword });
-
-      req.flash('message', { type: 'success', text: 'Registered successfully! You can now log in.' });
-      
-      req.session.user = { id: user.id, username: user.username };
-      res.redirect('/login');
+      return res.redirect('/register');
     }
+
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const user = await User.create({ username, password: hashedPassword });
+
+    req.flash('message', { type: 'success', text: 'Registered successfully! You can now log in.' });
+
+    req.session.user = { id: user.id, username: user.username };
+    res.redirect('/login');
   } catch (error) {
     console.error(error);
     res.redirect('/register');
   }
 });
+
 
 
 router.get('/login', (req, res) => {
