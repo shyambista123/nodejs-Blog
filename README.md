@@ -62,5 +62,7 @@ This project focuses on developing a blog sharing application using Node.js, Exp
     ```cd nodejs-Blog```
     - Install packages
     ```npm install```
+    - Migrate 
+    ```npx sequelize-cli db:migrate```
     - Run project
     ```node app.js```
